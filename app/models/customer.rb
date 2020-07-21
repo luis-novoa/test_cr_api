@@ -1,8 +1,9 @@
 class Customer < ApplicationRecord
   before_save :capitalize_first_letter
 
-  has_many :carts
+  validates :name, presence: true, uniqueness: { case_sensitive: false }, length: { minimum: 2, maximum: 50 }
 
+  has_many :carts
   private
 
   def capitalize_first_letter
