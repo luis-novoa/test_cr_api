@@ -56,6 +56,37 @@ RSpec.describe 'Medicine request', type: :request do
     end
   end
 
+  describe 'GET /api/medicines/:id' do
+    context 'with existing medicine id' do
+      before(:each) do
+        medicine = Medicine.create(name: 'Test', value: 1, quantity: 1, stock: 1)
+        get "/api/medicines/#{medicine.id}"
+      end
+
+      it 'responds with 200' do
+        expect(response).to have_http_status(200)
+      end
+
+      it "returns medicine's information" do
+        expect(response.body).to match(/Test/)
+      end
+    end
+
+    context 'with inexistent medicine id' do
+      before(:each) do
+        get '/api/medicines/1'
+      end
+
+      it "responds with 404" do
+        expect(response).to have_http_status(404)
+      end
+
+      it 'returns warning' do
+        expect(response.body).to match(/This medicine doesn't exist./)
+      end
+    end
+  end
+
   describe 'GET /api/medicines' do
     context 'with registered medicines' do
       before(:each) do

@@ -1,4 +1,6 @@
 class API::MedicinesController < API::APIController
+  before_action :find_medicine, only: [:update, :show, :destroy]
+
   def create
     @medicine = Medicine.new(medicine_params)
     if @medicine.save
@@ -6,6 +8,10 @@ class API::MedicinesController < API::APIController
     else
       render json: @medicine.errors, status: :unprocessable_entity
     end
+  end
+
+  def show
+    render json: @medicine, status: :ok
   end
 
   def index
@@ -18,16 +24,19 @@ class API::MedicinesController < API::APIController
   end
 
   def destroy
-    @medicine = Medicine.find(params[:id])
     @medicine.delete
     render json: "#{@medicine.name} was deleted!", status: :ok
-  rescue ActiveRecord::RecordNotFound
-    render json: "This medicine doesn't exist.", status: :not_found
   end
 
   private
   
   def medicine_params
     params.require(:medicine).permit(:name, :value, :quantity, :stock)
+  end
+
+  def find_medicine
+    @medicine = Medicine.find(params[:id])
+  rescue ActiveRecord::RecordNotFound
+    render json: "This medicine doesn't exist.", status: :not_found
   end
 end
