@@ -5,11 +5,17 @@ RSpec.describe Customer, type: :model do
     it { is_expected.to have_many :carts }
   end
 
-  context "#name" do
+  context '#name' do
     subject { Customer.new(name: 'test') }
-    it "first letter is always capitalized" do
+    it 'first letter is always capitalized' do
       subject.save
       expect(subject.name).to eq('Test') 
+    end
+
+    it 'first letter is always capitalized for more than one word' do
+      subject.name = 'another test'
+      subject.save
+      expect(subject.name).to eq('Another Test') 
     end
 
     it { is_expected.to validate_presence_of(:name) }

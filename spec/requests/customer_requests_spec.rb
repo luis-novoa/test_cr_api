@@ -12,12 +12,13 @@ RSpec.describe 'Customer request', type: :request do
         Customer.create(name: 'Test')
         post '/api/customers', params: parameters
       end
+
       it 'responds with 422' do
         expect(response).to have_http_status(422)
       end
 
       it 'returns errors' do
-        expect(response.body).to match(/name/)
+        expect(response.body).to match(/has already been taken/)
       end
     end
 

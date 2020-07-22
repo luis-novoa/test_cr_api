@@ -7,7 +7,9 @@ class Customer < ApplicationRecord
   private
 
   def capitalize_first_letter
-    name.capitalize!
+    name = self.name.split(' ')
+    name.map!(&:capitalize)
+    self.name = name.join(' ')
   end
   
 end
