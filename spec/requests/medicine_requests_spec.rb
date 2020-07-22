@@ -73,9 +73,7 @@ RSpec.describe 'Medicine request', type: :request do
     end
 
     context 'with inexistent medicine id' do
-      before(:each) do
-        get '/api/medicines/1'
-      end
+      before(:each) { get '/api/medicines/1' }
 
       it "responds with 404" do
         expect(response).to have_http_status(404)
@@ -109,9 +107,8 @@ RSpec.describe 'Medicine request', type: :request do
     end
 
     context 'without registered medicines' do
-      before(:each) do
-        get '/api/medicines'
-      end
+      before(:each) { get '/api/medicines' }
+
       it 'responds with 200' do
         expect(response).to have_http_status(200)
       end
@@ -170,9 +167,7 @@ RSpec.describe 'Medicine request', type: :request do
     end
 
     context 'with inexistent medicine id' do
-      before(:each) do
-        put '/api/medicines/1'
-      end
+      before(:each) { put '/api/medicines/1' }
 
       it "responds with 404" do
         expect(response).to have_http_status(404)

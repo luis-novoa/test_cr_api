@@ -72,9 +72,8 @@ RSpec.describe 'Customer request', type: :request do
     end
 
     context 'without registered customers' do
-      before(:each) do
-        get '/api/customers'
-      end
+      before(:each) { get '/api/customers' }
+
       it 'responds with 200' do
         expect(response).to have_http_status(200)
       end
@@ -106,9 +105,7 @@ RSpec.describe 'Customer request', type: :request do
     end
 
     context 'with inexistent customer id' do
-      before(:each) do
-        delete '/api/customers/1'
-      end
+      before(:each) { delete '/api/customers/1' }
 
       it "responds with 404" do
         expect(response).to have_http_status(404)

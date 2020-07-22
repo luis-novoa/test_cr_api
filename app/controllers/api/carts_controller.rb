@@ -1,11 +1,18 @@
 class API::CartsController < API::APIController
   before_action -> { find_object(Customer, cart_params[:customer_id], 'customer') }, only: [:create]
+  before_action -> { find_object(Cart, params[:id], 'cart') }, only: [:destroy]
 
   def create
     @cart = @object_found.carts.build
     @cart.save
     render json: @cart, status: :created
   end
+
+  def destroy
+    @object_found.delete
+    render json: "Cart #{params[:id]} was deleted!", status: :ok
+  end
+  
 
   private
 
