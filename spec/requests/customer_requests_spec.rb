@@ -44,4 +44,35 @@ RSpec.describe 'Customer request', type: :request do
       end
     end
   end
+
+  describe 'GET /api/customers' do
+    context 'with registered customers' do
+      before(:each) do
+        Customer.create(name: 'Test')
+        Customer.create(name: 'Test1')
+        get '/api/customers'
+      end
+      it 'responds with 200' do
+        expect(response).to have_http_status(200)
+      end
+
+      it 'returns list of customers' do
+        json_response = JSON.parse(response.body)
+        expect(json_response.size).to eq(2)
+      end
+    end
+
+    context 'without registered customers' do
+      before(:each) do
+        get '/api/customers'
+      end
+      it 'responds with 200' do
+        expect(response).to have_http_status(200)
+      end
+
+      it 'returns warning' do
+        expect(response.body).to match(/No customers registered yet!/)
+      end
+    end
+  end
 end

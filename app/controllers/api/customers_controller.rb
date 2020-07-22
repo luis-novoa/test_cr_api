@@ -8,6 +8,15 @@ class API::CustomersController < API::APIController
     end
   end
 
+  def index
+    @customers = Customer.all
+    if @customers.empty?
+      render json: 'No customers registered yet!', status: :ok
+    else
+      render json: @customers, status: :ok
+    end
+  end
+
   private
   
   def customer_params
