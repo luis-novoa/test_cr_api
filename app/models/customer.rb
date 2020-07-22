@@ -5,11 +5,5 @@ class Customer < ApplicationRecord
 
   has_many :carts
   private
-
-  def capitalize_first_letter
-    name = self.name.split(' ')
-    name.map!(&:capitalize)
-    self.name = name.join(' ')
-  end
   
 end

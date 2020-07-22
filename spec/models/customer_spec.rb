@@ -5,7 +5,7 @@ RSpec.describe Customer, type: :model do
     it { is_expected.to have_many :carts }
   end
 
-  context '#name' do
+  context '.name' do
     subject { Customer.new(name: 'test') }
     it 'first letter is always capitalized' do
       subject.save

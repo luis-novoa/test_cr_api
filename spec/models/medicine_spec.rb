@@ -16,6 +16,20 @@ RSpec.describe Medicine, type: :model do
     it { is_expected.to validate_numericality_of(:stock).is_greater_than_or_equal_to(0) }
   end
 
+  context '.name' do
+    it 'first letter is always capitalized' do
+      subject.name = 'test'
+      subject.save
+      expect(subject.name).to eq('Test') 
+    end
+
+    it 'first letter is always capitalized for more than one word' do
+      subject.name = 'another test'
+      subject.save
+      expect(subject.name).to eq('Another Test') 
+    end
+  end
+
   context '#total' do
     it 'multiplies' do
       expect(subject.total).to eql 10.0
