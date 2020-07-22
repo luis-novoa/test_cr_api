@@ -17,6 +17,14 @@ class API::CustomersController < API::APIController
     end
   end
 
+  def destroy
+    @customer = Customer.find(params[:id])
+    @customer.delete
+    render json: "#{@customer.name} was deleted!", status: :ok
+  rescue ActiveRecord::RecordNotFound
+    render json: "This customer doesn't exist.", status: :not_found
+  end
+
   private
   
   def customer_params
