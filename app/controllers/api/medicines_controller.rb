@@ -23,6 +23,15 @@ class API::MedicinesController < API::APIController
     end
   end
 
+  def update
+    # @medicine = Medicine.new(medicine_params)
+    if @medicine.update(medicine_params)
+      render json: @medicine, status: :ok
+    else
+      render json: @medicine.errors, status: :unprocessable_entity
+    end
+  end
+
   def destroy
     @medicine.delete
     render json: "#{@medicine.name} was deleted!", status: :ok

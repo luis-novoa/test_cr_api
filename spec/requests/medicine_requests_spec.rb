@@ -122,6 +122,68 @@ RSpec.describe 'Medicine request', type: :request do
     end
   end
 
+  describe 'PUT /api/medicines/:id' do
+    context 'with existing medicine id' do
+      context "and correct information" do
+        before(:each) do
+          medicine = Medicine.create(name: 'test', value: 1, quantity: 1, stock: 1)
+          parameters = {
+            medicine: {
+              stock: 10
+            }
+          }
+          put "/api/medicines/#{medicine.id}", params: parameters
+        end
+  
+        it 'responds with 200' do
+          expect(response).to have_http_status(200)
+        end
+  
+        it 'changes medicine information' do
+          expect(Medicine.find_by(name: 'Test').stock).to eq(10)
+        end
+  
+        it 'returns modified medicine' do
+          expect(response.body).to match(/\"stock\":10/)
+        end
+      end
+      
+      context "and wrong information" do
+        before(:each) do
+          medicine = Medicine.create(name: 'test', value: 1, quantity: 1, stock: 1)
+          parameters = {
+            medicine: {
+              stock: -1
+            }
+          }
+          put "/api/medicines/#{medicine.id}", params: parameters
+        end
+
+        it 'responds with 422' do
+          expect(response).to have_http_status(422)
+        end
+  
+        it 'returns errors' do
+          expect(response.body).to match(/must be greater than or equal to 0/)
+        end
+      end
+    end
+
+    context 'with inexistent medicine id' do
+      before(:each) do
+        put '/api/medicines/1'
+      end
+
+      it "responds with 404" do
+        expect(response).to have_http_status(404)
+      end
+
+      it 'returns warning' do
+        expect(response.body).to match(/This medicine doesn't exist./)
+      end
+    end
+  end
+
   describe 'DELETE /api/medicines/:id' do
     context 'with existing medicine id' do
       before(:each) do
