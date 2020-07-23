@@ -3,5 +3,6 @@ Rails.application.routes.draw do
     resources :customers, only: %i[create index destroy]
     resources :medicines, except: %i[new edit]
     resources :carts, only: %i[create index destroy]
+    resources :cart_items, only: %i[create destroy]
   end
 end
