@@ -8,6 +8,15 @@ class API::CartsController < API::APIController
     render json: @cart, status: :created
   end
 
+  def index
+    @carts = Cart.all
+    if @carts.empty?
+      render json: 'No carts registered yet!', status: :ok
+    else
+      render json: @carts, status: :ok
+    end
+  end
+
   def destroy
     @object_found.delete
     render json: "Cart #{params[:id]} was deleted!", status: :ok

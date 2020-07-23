@@ -43,6 +43,41 @@ RSpec.describe 'Cart request', type: :request do
     end
   end
 
+  describe 'GET /api/carts' do
+    context 'with registered carts' do
+      let(:customer) { Customer.create(name: 'Test') }
+      before(:each) do
+        customer.carts.build.save
+        customer.carts.build.save
+        get '/api/carts'
+      end
+      it 'responds with 200' do
+        expect(response).to have_http_status(200)
+      end
+
+      it 'returns list of carts' do
+        json_response = JSON.parse(response.body)
+        expect(json_response.size).to eq(2)
+      end
+
+      it "informs carts' ids" do
+        expect(response.body).to match(/id/)
+      end
+    end
+
+    context 'without registered carts' do
+      before(:each) { get '/api/carts' }
+
+      it 'responds with 200' do
+        expect(response).to have_http_status(200)
+      end
+
+      it 'returns warning' do
+        expect(response.body).to match(/No carts registered yet!/)
+      end
+    end
+  end
+
   describe 'DELETE api/carts/:id' do
     context 'with invalid cart id' do
       before(:each) { delete '/api/carts/1' }
