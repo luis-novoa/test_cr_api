@@ -103,7 +103,7 @@ RSpec.describe 'Cart request', type: :request do
         end
 
         it 'returns sum of items in the cart' do
-          expect(response.body).to match(/\"total\":2/)
+          expect(response.body).to match(/\"total\":1.9/)
         end
       end
 
