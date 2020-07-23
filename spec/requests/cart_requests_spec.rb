@@ -86,8 +86,8 @@ RSpec.describe 'Cart request', type: :request do
       context 'and cart filled' do
         let(:medicine) { Medicine.create(name: 'Test1', value: 1, quantity: 1, stock: 1) }
         let(:medicine2) { Medicine.create(name: 'Test2', value: 1, quantity: 1, stock: 1) }
-        let(:cart_item) {CartItem.new(cart_id: cart.id, medicine_id: medicine.id, quantity: 1)}
-        let(:cart_item2) {CartItem.new(cart_id: cart.id, medicine_id: medicine2.id, quantity: 1)}
+        let(:cart_item) { CartItem.new(cart_id: cart.id, medicine_id: medicine.id, quantity: 1) }
+        let(:cart_item2) { CartItem.new(cart_id: cart.id, medicine_id: medicine2.id, quantity: 1) }
         before(:each) do
           cart_item.save
           cart_item2.save

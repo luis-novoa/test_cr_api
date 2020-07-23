@@ -70,14 +70,6 @@ RSpec.describe 'Cart request', type: :request do
         expect(response.body).to match(/#{medicine.name} added to cart #{cart.id}./)
       end
 
-      # it 'returns list of items in the cart' do
-      #   expect(response.body).to match(/\"medicine_id\":#{medicine.id}/).and match(/\"medicine_id\":#{medicine2.id}/)
-      # end
-
-      # it 'returns new sum of items in the cart' do
-      #   expect(response.body).to match(/\"total\":2/)
-      # end
-
       it 'deduces quantity from medicine stock' do
         expect(Medicine.find(medicine.id).stock).to eq(0)
       end
@@ -139,14 +131,6 @@ RSpec.describe 'Cart request', type: :request do
       it 'returns succesful message' do
         expect(response.body).to match(/#{medicine.name} removed from cart #{cart.id}./)
       end
-
-      # it 'returns list of items in the cart' do
-      #   expect(response.body).to match(/\"medicine_id\":#{medicine.id}/)
-      # end
-
-      # it 'returns new sum of items in the cart' do
-      #   expect(response.body).to match(/\"total\":1/)
-      # end
 
       it 'returns quantity to the medicine stock' do
         expect(Medicine.find(medicine.id).stock).to eq(2)
