@@ -1,5 +1,6 @@
 class API::CartItemsController < API::APIController
   before_action -> { find_object(Medicine, cart_item_params[:medicine_id], 'medicine') }, only: [:create]
+  before_action :update_medicine_stock, only: [:create]
   before_action -> { find_object(Cart, cart_item_params[:cart_id], 'cart') }, only: [:create]
 
   def create
@@ -17,5 +18,15 @@ class API::CartItemsController < API::APIController
 
   def cart_item_params
     params.require(:cart_item).permit(:cart_id, :medicine_id, :quantity)
+  end
+
+  def update_medicine_stock
+    medicine = @object_found
+    new_stock = medicine.stock - cart_item_params[:quantity].to_i
+    if new_stock >= 0
+      medicine.update(stock: new_stock)
+    else
+      render json: "Not enough #{medicine.name} in stock!", status: :unprocessable_entity
+    end
   end
 end

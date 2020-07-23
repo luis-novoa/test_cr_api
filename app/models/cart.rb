@@ -6,7 +6,7 @@ class Cart < ApplicationRecord
 
   def total
     total = 0
-    cart_items.each { |e| total += e.quantity * e.medicine.value }
+    cart_items.includes(:medicine).each { |e| total += e.quantity * e.medicine.value }
     total
   end
 end

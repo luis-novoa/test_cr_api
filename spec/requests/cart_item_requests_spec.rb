@@ -74,6 +74,36 @@ RSpec.describe 'Cart request', type: :request do
       it 'returns new sum of items in the cart' do
         expect(response.body).to match(/\"total\":2/)
       end
+
+      it 'deduces quantity from medicine stock' do
+        expect(Medicine.find(medicine.id).stock).to eq(0)
+      end
+    end
+
+    context 'with quantity bigger than stock' do
+      before(:each) do
+        cart.save
+        parameters = {
+          cart_item: {
+            cart_id: cart.id,
+            medicine_id: medicine.id,
+            quantity: 10
+          }
+        }
+        post '/api/cart_items', params: parameters
+      end
+
+      it 'responds with 422' do
+        expect(response).to have_http_status(422)
+      end
+
+      it 'returns error' do
+        expect(response.body).to match(/Not enough #{medicine.name} in stock!/)
+      end
+
+      it 'cancel item addition' do
+        expect(cart.cart_items.count).to eq(0)
+      end
     end
   end
 

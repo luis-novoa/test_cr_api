@@ -22,5 +22,10 @@ RSpec.describe Cart, type: :model do
       CartItem.create(cart_id: cart.id, medicine_id: medicine2.id, quantity: 1)
       expect(cart.total).to eq(11)
     end
+
+    it 'can handle empty carts' do
+      cart.save
+      expect(cart.total).to eq(0)
+    end
   end
 end
