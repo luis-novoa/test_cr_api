@@ -70,6 +70,10 @@ RSpec.describe 'Cart request', type: :request do
       it 'returns list of items in the cart' do
         expect(response.body).to match(/\"medicine_id\":#{medicine.id}/).and match(/\"medicine_id\":#{medicine2.id}/)
       end
+
+      it 'returns new sum of items in the cart' do
+        expect(response.body).to match(/\"total\":2/)
+      end
     end
   end
 

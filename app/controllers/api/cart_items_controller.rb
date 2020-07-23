@@ -5,7 +5,9 @@ class API::CartItemsController < API::APIController
   def create
     @cart_item = CartItem.new(cart_item_params)
     if @cart_item.save
-      render json: @object_found.cart_items, status: :created
+      json_output = @object_found.to_json(include: :cart_items)
+      json_output[-1] = ",\"total\":#{@object_found.total}}"
+      render json: json_output, status: :created
     else
       render json: @cart_item.errors, status: :unprocessable_entity
     end

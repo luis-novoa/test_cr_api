@@ -3,4 +3,10 @@ class Cart < ApplicationRecord
 
   belongs_to :customer
   has_many :cart_items
+
+  def total
+    total = 0
+    cart_items.each { |e| total += e.quantity * e.medicine.value }
+    total
+  end
 end
