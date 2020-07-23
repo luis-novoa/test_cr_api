@@ -78,6 +78,61 @@ RSpec.describe 'Cart request', type: :request do
     end
   end
 
+  describe 'GET /api/carts/:id' do
+    context 'with existing cart id' do
+      let(:customer) { Customer.create(name: 'test') }
+      let(:cart) { Cart.create(customer_id: customer.id) }
+
+      context 'and cart filled' do
+        let(:medicine) { Medicine.create(name: 'Test1', value: 1, quantity: 1, stock: 1) }
+        let(:medicine2) { Medicine.create(name: 'Test2', value: 1, quantity: 1, stock: 1) }
+        let(:cart_item) {CartItem.new(cart_id: cart.id, medicine_id: medicine.id, quantity: 1)}
+        let(:cart_item2) {CartItem.new(cart_id: cart.id, medicine_id: medicine2.id, quantity: 1)}
+        before(:each) do
+          cart_item.save
+          cart_item2.save
+          get "/api/carts/#{cart.id}"
+        end
+  
+        it 'responds with 200' do
+          expect(response).to have_http_status(200)
+        end
+  
+        it 'returns list of items in the cart' do
+          expect(response.body).to match(/\"medicine_id\":#{medicine.id}/).and match(/\"medicine_id\":#{medicine2.id}/)
+        end
+
+        it 'returns sum of items in the cart' do
+          expect(response.body).to match(/\"total\":2/)
+        end
+      end
+
+      context 'and empty cart' do
+        before(:each) { get "/api/carts/#{cart.id}" }
+  
+        it 'responds with 200' do
+          expect(response).to have_http_status(200)
+        end
+  
+        it 'returns informative message' do
+          expect(response.body).to match(/This cart is empty./)
+        end
+      end
+    end
+
+    context 'with inexistent cart id' do
+      before(:each) { get '/api/carts/1' }
+
+      it "responds with 404" do
+        expect(response).to have_http_status(404)
+      end
+
+      it 'returns warning' do
+        expect(response.body).to match(/This cart doesn't exist./)
+      end
+    end
+  end
+
   describe 'DELETE api/carts/:id' do
     context 'with invalid cart id' do
       before(:each) { delete '/api/carts/1' }

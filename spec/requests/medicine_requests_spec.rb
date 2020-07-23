@@ -58,10 +58,8 @@ RSpec.describe 'Medicine request', type: :request do
 
   describe 'GET /api/medicines/:id' do
     context 'with existing medicine id' do
-      before(:each) do
-        medicine = Medicine.create(name: 'Test', value: 1, quantity: 1, stock: 1)
-        get "/api/medicines/#{medicine.id}"
-      end
+      let(:medicine) { Medicine.create(name: 'Test', value: 1, quantity: 1, stock: 1) }
+      before(:each) { get "/api/medicines/#{medicine.id}" }
 
       it 'responds with 200' do
         expect(response).to have_http_status(200)
