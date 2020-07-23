@@ -1,10 +1,10 @@
 require 'rails_helper'
 
 RSpec.describe 'Cart request', type: :request do
+  let(:customer) { Customer.create(name: 'test') }
+  let(:medicine) { Medicine.create(name: 'Test1', value: 1, quantity: 1, stock: 1) }
+
   describe 'POST api/cart_items' do
-    let(:customer) { Customer.create(name: 'test') }
-    let(:medicine) { Medicine.create(name: 'Test1', value: 1, quantity: 1, stock: 1) }
-    let(:medicine2) { Medicine.create(name: 'Test2', value: 1, quantity: 1, stock: 1) }
     let(:cart) { customer.carts.build }
 
     context 'with invalid cart id' do
@@ -52,7 +52,6 @@ RSpec.describe 'Cart request', type: :request do
     context 'with valid cart id' do
       before(:each) do
         cart.save
-        CartItem.create(cart_id: cart.id, medicine_id: medicine2.id, quantity: 1)
         parameters = {
           cart_item: {
             cart_id: cart.id,
@@ -67,13 +66,17 @@ RSpec.describe 'Cart request', type: :request do
         expect(response).to have_http_status(201)
       end
 
-      it 'returns list of items in the cart' do
-        expect(response.body).to match(/\"medicine_id\":#{medicine.id}/).and match(/\"medicine_id\":#{medicine2.id}/)
+      it 'returns succesful message' do
+        expect(response.body).to match(/#{medicine.name} added to cart #{cart.id}./)
       end
 
-      it 'returns new sum of items in the cart' do
-        expect(response.body).to match(/\"total\":2/)
-      end
+      # it 'returns list of items in the cart' do
+      #   expect(response.body).to match(/\"medicine_id\":#{medicine.id}/).and match(/\"medicine_id\":#{medicine2.id}/)
+      # end
+
+      # it 'returns new sum of items in the cart' do
+      #   expect(response.body).to match(/\"total\":2/)
+      # end
 
       it 'deduces quantity from medicine stock' do
         expect(Medicine.find(medicine.id).stock).to eq(0)
@@ -107,38 +110,47 @@ RSpec.describe 'Cart request', type: :request do
     end
   end
 
-  # describe 'DELETE api/carts/:id' do
-  #   context 'with invalid cart id' do
-  #     before(:each) { delete '/api/cart_items/1' }
+  describe 'DELETE api/cart_items/:id' do
+    let(:cart) { Cart.create(customer_id: customer.id) }
+    let(:cart_item) {CartItem.new(cart_id: cart.id, medicine_id: medicine.id, quantity: 1)}
 
-  #     it 'responds with 404' do
-  #       expect(response).to have_http_status(404)
-  #     end
+    context 'with invalid cart_item id' do
+      before(:each) { delete "/api/cart_items/1" }
 
-  #     it 'returns errors' do
-  #       expect(response.body).to match(/This cart doesn't exist./)
-  #     end
-  #   end
+      it 'responds with 404' do
+        expect(response).to have_http_status(404)
+      end
 
-  #   context 'with valid cart id' do
-  #     let(:customer) { Customer.create(name: 'test') }
-  #     let(:cart) { customer.carts.build }
-  #     before(:each) do
-  #       cart.save
-  #       delete "/api/cart_items/#{cart.id}"
-  #     end
+      it 'returns errors' do
+        expect(response.body).to match(/This cart item doesn't exist./)
+      end
+    end
 
-  #     it 'responds with 200' do
-  #       expect(response).to have_http_status(200)
-  #     end
+    context 'with valid cart_item id' do
+      before(:each) do
+        cart_item.save
+        delete "/api/cart_items/#{cart_item.id}"
+      end
 
-  #     it 'deletes cart' do
-  #       expect(Cart.count).to eq(0)
-  #     end
+      it 'responds with 200' do
+        expect(response).to have_http_status(200)
+      end
 
-  #     it 'returns succesful message' do
-  #       expect(response.body).to match(/Cart #{cart.id} was deleted!/)
-  #     end
-  #   end
-  # end
+      it 'returns succesful message' do
+        expect(response.body).to match(/#{medicine.name} removed from cart #{cart.id}./)
+      end
+
+      # it 'returns list of items in the cart' do
+      #   expect(response.body).to match(/\"medicine_id\":#{medicine.id}/)
+      # end
+
+      # it 'returns new sum of items in the cart' do
+      #   expect(response.body).to match(/\"total\":1/)
+      # end
+
+      it 'returns quantity to the medicine stock' do
+        expect(Medicine.find(medicine.id).stock).to eq(2)
+      end
+    end
+  end
 end
