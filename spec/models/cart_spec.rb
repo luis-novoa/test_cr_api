@@ -17,6 +17,8 @@ RSpec.describe Cart, type: :model do
   let(:medicine3) { Medicine.create(name: 'Test3', value: 1, quantity: 1, stock: 10) }
   let(:medicine4) { Medicine.create(name: 'Test4', value: 1, quantity: 1, stock: 10) }
   let(:medicine5) { Medicine.create(name: 'Test5', value: 1, quantity: 1, stock: 10) }
+  let(:medicine6) { Medicine.create(name: 'Test6', value: 1, quantity: 1, stock: 10) }
+  let(:medicine7) { Medicine.create(name: 'Test7', value: 1, quantity: 1, stock: 10) }
   let(:cart) { Cart.create(customer_id: customer.id) }
 
     it "doesn't apply discount on repeated items" do
@@ -55,6 +57,16 @@ RSpec.describe Cart, type: :model do
     end
 
     it 'groups items to offer the best discounts' do
+      medicine.update(value: 20)
+      CartItem.create(cart_id: cart.id, medicine_id: medicine.id, quantity: 1)
+      CartItem.create(cart_id: cart.id, medicine_id: medicine2.id, quantity: 1)
+      CartItem.create(cart_id: cart.id, medicine_id: medicine3.id, quantity: 2)
+      CartItem.create(cart_id: cart.id, medicine_id: medicine4.id, quantity: 2)
+      CartItem.create(cart_id: cart.id, medicine_id: medicine5.id, quantity: 2)
+      expect(cart.total).to eq(20.7)
+    end
+
+    it 'groups items to offer the best discounts 2' do
       CartItem.create(cart_id: cart.id, medicine_id: medicine.id, quantity: 1)
       CartItem.create(cart_id: cart.id, medicine_id: medicine2.id, quantity: 1)
       CartItem.create(cart_id: cart.id, medicine_id: medicine3.id, quantity: 2)
@@ -63,8 +75,15 @@ RSpec.describe Cart, type: :model do
       expect(cart.total).to eq(6.4)
     end
 
-    it 'can handle empty carts' do
-      expect(cart.total).to eq(0)
+    it 'creates groups of 5 efficiently' do
+      CartItem.create(cart_id: cart.id, medicine_id: medicine.id, quantity: 1)
+      CartItem.create(cart_id: cart.id, medicine_id: medicine2.id, quantity: 1)
+      CartItem.create(cart_id: cart.id, medicine_id: medicine3.id, quantity: 2)
+      CartItem.create(cart_id: cart.id, medicine_id: medicine4.id, quantity: 2)
+      CartItem.create(cart_id: cart.id, medicine_id: medicine5.id, quantity: 2)
+      CartItem.create(cart_id: cart.id, medicine_id: medicine6.id, quantity: 1)
+      CartItem.create(cart_id: cart.id, medicine_id: medicine7.id, quantity: 1)
+      expect(cart.total).to eq(7.5)
     end
   end
 end
