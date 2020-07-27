@@ -10,16 +10,16 @@ RSpec.describe Cart, type: :model do
     it { is_expected.to validate_numericality_of(:customer_id).is_greater_than(0) }
   end
 
-  context "#total" do
-  let(:customer) { Customer.create(name: 'test') }
-  let(:medicine) { Medicine.create(name: 'Test1', value: 1, quantity: 1, stock: 10) }
-  let(:medicine2) { Medicine.create(name: 'Test2', value: 1, quantity: 1, stock: 10) }
-  let(:medicine3) { Medicine.create(name: 'Test3', value: 1, quantity: 1, stock: 10) }
-  let(:medicine4) { Medicine.create(name: 'Test4', value: 1, quantity: 1, stock: 10) }
-  let(:medicine5) { Medicine.create(name: 'Test5', value: 1, quantity: 1, stock: 10) }
-  let(:medicine6) { Medicine.create(name: 'Test6', value: 1, quantity: 1, stock: 10) }
-  let(:medicine7) { Medicine.create(name: 'Test7', value: 1, quantity: 1, stock: 10) }
-  let(:cart) { Cart.create(customer_id: customer.id) }
+  context '#total' do
+    let(:customer) { Customer.create(name: 'test') }
+    let(:medicine) { Medicine.create(name: 'Test1', value: 1, quantity: 1, stock: 10) }
+    let(:medicine2) { Medicine.create(name: 'Test2', value: 1, quantity: 1, stock: 10) }
+    let(:medicine3) { Medicine.create(name: 'Test3', value: 1, quantity: 1, stock: 10) }
+    let(:medicine4) { Medicine.create(name: 'Test4', value: 1, quantity: 1, stock: 10) }
+    let(:medicine5) { Medicine.create(name: 'Test5', value: 1, quantity: 1, stock: 10) }
+    let(:medicine6) { Medicine.create(name: 'Test6', value: 1, quantity: 1, stock: 10) }
+    let(:medicine7) { Medicine.create(name: 'Test7', value: 1, quantity: 1, stock: 10) }
+    let(:cart) { Cart.create(customer_id: customer.id) }
 
     it "doesn't apply discount on repeated items" do
       CartItem.create(cart_id: cart.id, medicine_id: medicine.id, quantity: 5)

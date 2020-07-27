@@ -1,5 +1,5 @@
 class API::MedicinesController < API::APIController
-  before_action -> { find_object(Medicine, params[:id], 'medicine') }, only: [:update, :show, :destroy]
+  before_action -> { find_object(Medicine, params[:id], 'medicine') }, only: %i[update show destroy]
 
   def create
     @medicine = Medicine.new(medicine_params)
@@ -37,7 +37,7 @@ class API::MedicinesController < API::APIController
   end
 
   private
-  
+
   def medicine_params
     params.require(:medicine).permit(:name, :value, :quantity, :stock)
   end

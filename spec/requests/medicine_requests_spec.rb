@@ -30,7 +30,7 @@ RSpec.describe 'Medicine request', type: :request do
         parameters = {
           medicine: {
             name: 'test',
-            quantity: 1, 
+            quantity: 1,
             value: 1,
             stock: 1
           }
@@ -73,7 +73,7 @@ RSpec.describe 'Medicine request', type: :request do
     context 'with inexistent medicine id' do
       before(:each) { get '/api/medicines/1' }
 
-      it "responds with 404" do
+      it 'responds with 404' do
         expect(response).to have_http_status(404)
       end
 
@@ -119,7 +119,7 @@ RSpec.describe 'Medicine request', type: :request do
 
   describe 'PUT /api/medicines/:id' do
     context 'with existing medicine id' do
-      context "and correct information" do
+      context 'and correct information' do
         before(:each) do
           medicine = Medicine.create(name: 'test', value: 1, quantity: 1, stock: 1)
           parameters = {
@@ -129,21 +129,21 @@ RSpec.describe 'Medicine request', type: :request do
           }
           put "/api/medicines/#{medicine.id}", params: parameters
         end
-  
+
         it 'responds with 200' do
           expect(response).to have_http_status(200)
         end
-  
+
         it 'changes medicine information' do
           expect(Medicine.find_by(name: 'Test').stock).to eq(10)
         end
-  
+
         it 'returns modified medicine' do
           expect(response.body).to match(/\"stock\":10/)
         end
       end
-      
-      context "and wrong information" do
+
+      context 'and wrong information' do
         before(:each) do
           medicine = Medicine.create(name: 'test', value: 1, quantity: 1, stock: 1)
           parameters = {
@@ -157,7 +157,7 @@ RSpec.describe 'Medicine request', type: :request do
         it 'responds with 422' do
           expect(response).to have_http_status(422)
         end
-  
+
         it 'returns errors' do
           expect(response.body).to match(/must be greater than or equal to 0/)
         end
@@ -167,7 +167,7 @@ RSpec.describe 'Medicine request', type: :request do
     context 'with inexistent medicine id' do
       before(:each) { put '/api/medicines/1' }
 
-      it "responds with 404" do
+      it 'responds with 404' do
         expect(response).to have_http_status(404)
       end
 
@@ -202,7 +202,7 @@ RSpec.describe 'Medicine request', type: :request do
         delete '/api/medicines/1'
       end
 
-      it "responds with 404" do
+      it 'responds with 404' do
         expect(response).to have_http_status(404)
       end
 

@@ -104,10 +104,10 @@ RSpec.describe 'Cart request', type: :request do
 
   describe 'DELETE api/cart_items/:id' do
     let(:cart) { Cart.create(customer_id: customer.id) }
-    let(:cart_item) {CartItem.new(cart_id: cart.id, medicine_id: medicine.id, quantity: 1)}
+    let(:cart_item) { CartItem.new(cart_id: cart.id, medicine_id: medicine.id, quantity: 1) }
 
     context 'with invalid cart_item id' do
-      before(:each) { delete "/api/cart_items/1" }
+      before(:each) { delete '/api/cart_items/1' }
 
       it 'responds with 404' do
         expect(response).to have_http_status(404)

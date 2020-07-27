@@ -107,7 +107,7 @@ RSpec.describe 'Customer request', type: :request do
     context 'with inexistent customer id' do
       before(:each) { delete '/api/customers/1' }
 
-      it "responds with 404" do
+      it 'responds with 404' do
         expect(response).to have_http_status(404)
       end
 

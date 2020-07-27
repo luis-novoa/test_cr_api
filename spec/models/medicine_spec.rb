@@ -4,7 +4,7 @@ RSpec.describe Medicine, type: :model do
   let(:valid_attributes) { { name: 'Aspirina', value: 10.0, quantity: 1, stock: 10 } }
   subject { Medicine.new(valid_attributes) }
 
-  context "validations" do
+  context 'validations' do
     it { is_expected.to validate_presence_of(:name) }
     it { is_expected.to validate_uniqueness_of(:name).case_insensitive }
     it { is_expected.to validate_length_of(:name).is_at_least(2).is_at_most(50) }
@@ -20,13 +20,13 @@ RSpec.describe Medicine, type: :model do
     it 'first letter is always capitalized' do
       subject.name = 'test'
       subject.save
-      expect(subject.name).to eq('Test') 
+      expect(subject.name).to eq('Test')
     end
 
     it 'first letter is always capitalized for more than one word' do
       subject.name = 'another test'
       subject.save
-      expect(subject.name).to eq('Another Test') 
+      expect(subject.name).to eq('Another Test')
     end
   end
 

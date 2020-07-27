@@ -7,7 +7,6 @@ RSpec.describe CartItem, type: :model do
   end
 
   context 'validations' do
-
     it { is_expected.to validate_presence_of(:cart_id) }
     it { is_expected.to validate_numericality_of(:cart_id).is_greater_than(0) }
     it { is_expected.to validate_presence_of(:medicine_id) }

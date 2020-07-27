@@ -26,7 +26,7 @@ class API::CustomersController < API::APIController
   end
 
   private
-  
+
   def customer_params
     params.require(:customer).permit(:name)
   end

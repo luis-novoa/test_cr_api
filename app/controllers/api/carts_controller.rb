@@ -32,7 +32,6 @@ class API::CartsController < API::APIController
     @object_found.delete
     render json: "Cart #{params[:id]} was deleted!", status: :ok
   end
-  
 
   private
 
